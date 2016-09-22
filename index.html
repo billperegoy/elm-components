@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <script type="text/javascript" src="dest/bundle.js"></script>
+    <script   src="https://code.jquery.com/jquery-3.1.0.min.js"
+      integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/accordion.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" media="screen" />
+  </head>
+  <body>
+    <div id="elm-app"></div>
+
+    <script type="text/javascript">
+      var elmDiv = document.getElementById('elm-app');
+      var app = Elm.Main.embed(elmDiv);
+      Accordion.setup(app);
+    </script>
+  </body>
+</html>
