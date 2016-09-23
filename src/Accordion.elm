@@ -39,6 +39,13 @@ type alias AccordionElement a =
     }
 
 
+accordionSubItem : List (Html a) -> Html a
+accordionSubItem content =
+    li []
+        [ a [ href "javascript:void(0)" ] content
+        ]
+
+
 type ToggleSpeed
     = Fast
     | Slow
@@ -90,13 +97,6 @@ update msg model =
 --
 -- View
 --
-
-
-accordionSubItem : List (Html a) -> Html a
-accordionSubItem content =
-    li []
-        [ a [ href "javascript:void(0)" ] content
-        ]
 
 
 itemIdString : Int -> String

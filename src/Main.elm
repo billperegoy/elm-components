@@ -22,8 +22,7 @@ type alias Model =
 
 
 type Msg
-    = NoOp
-    | Accordion1 Accordion.Msg
+    = Accordion1 Accordion.Msg
     | Accordion2 Accordion.Msg
 
 
@@ -74,9 +73,6 @@ initAccordionElements =
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
-        NoOp ->
-            model ! []
-
         Accordion1 msg ->
             let
                 ( result, cmd ) =
