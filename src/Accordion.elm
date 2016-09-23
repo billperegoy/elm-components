@@ -19,6 +19,8 @@ type ToggleSpeed
 
 type alias AccordionData a =
     { elements : List (AccordionElement a)
+    , name : String
+    , toggleSpeed : ToggleSpeed
     }
 
 
@@ -33,24 +35,8 @@ type alias VisibilityElement =
 
 
 type alias Model =
-    { name : String
-    , visible : List VisibilityElement
-    , toggleSpeed : ToggleSpeed
+    { visible : List VisibilityElement
     }
-
-
-init : ( Model, Cmd Msg )
-init =
-    { name = "accordion-1"
-    , visible =
-        [ ( 0, False )
-        , ( 1, False )
-        , ( 2, False )
-        , ( 3, False )
-        ]
-    , toggleSpeed = Fast
-    }
-        ! []
 
 
 
@@ -60,7 +46,7 @@ init =
 
 
 type Msg
-    = Toggle Int
+    = Toggle String Int ToggleSpeed
 
 
 toggleIfSelected : Int -> VisibilityElement -> VisibilityElement
@@ -87,11 +73,11 @@ speedToInt speed =
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
-        Toggle id ->
+        Toggle name id speed ->
             { model
                 | visible = List.map (\e -> toggleIfSelected id e) model.visible
             }
-                ! [ toggleAccordion ( model.name, (itemIdString id), speedToInt model.toggleSpeed ) ]
+                ! [ toggleAccordion ( name, (itemIdString id), speedToInt speed ) ]
 
 
 
@@ -120,8 +106,8 @@ expandedClass visibility =
         "is-not-expended"
 
 
-accordionItem : ( VisibilityElement, AccordionElement Msg ) -> Html Msg
-accordionItem visibiityTuple =
+accordionItem : String -> ToggleSpeed -> ( VisibilityElement, AccordionElement Msg ) -> Html Msg
+accordionItem name toggleSpeed visibiityTuple =
     let
         ( visibility, data ) =
             visibiityTuple
@@ -131,7 +117,7 @@ accordionItem visibiityTuple =
                 [ id (itemIdString (fst visibility))
                 , class (expandedClass visibility)
                 , href "javascript:void(0)"
-                , onClick (Toggle (fst visibility))
+                , onClick (Toggle name (fst visibility) toggleSpeed)
                 ]
                 [ text data.label ]
             , ul
@@ -140,21 +126,21 @@ accordionItem visibiityTuple =
             ]
 
 
-accordionList : Model -> List (AccordionElement Msg) -> Html Msg
+accordionList : Model -> AccordionData Msg -> Html Msg
 accordionList model data =
     let
         zippedData : List ( VisibilityElement, AccordionElement Msg )
         zippedData =
-            List.map2 (,) model.visible data
+            List.map2 (,) model.visible data.elements
     in
-        ul [ class "accordion", id model.name ]
-            (List.map accordionItem zippedData)
+        ul [ class "accordion", id data.name ]
+            (List.map (accordionItem data.name data.toggleSpeed) zippedData)
 
 
 view : Model -> AccordionData Msg -> Html Msg
 view model data =
     div []
-        [ accordionList model data.elements
+        [ accordionList model data
         ]
 
 

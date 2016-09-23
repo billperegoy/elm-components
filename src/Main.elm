@@ -30,12 +30,16 @@ type Msg
 initAccordionData1 : AccordionData Accordion.Msg
 initAccordionData1 =
     { elements = initAccordionElements
+    , name = "accordion-1"
+    , toggleSpeed = Fast
     }
 
 
 initAccordionData2 : AccordionData Accordion.Msg
 initAccordionData2 =
     { elements = initAccordionElements
+    , name = "accordion-2"
+    , toggleSpeed = Slow
     }
 
 
@@ -90,27 +94,23 @@ update msg model =
 
 init1 : Accordion.Model
 init1 =
-    { name = "accordion-1"
-    , visible =
+    { visible =
         [ ( 0, False )
         , ( 1, False )
         , ( 2, False )
         , ( 3, False )
         ]
-    , toggleSpeed = Fast
     }
 
 
 init2 : Accordion.Model
 init2 =
-    { name = "accordion-2"
-    , visible =
+    { visible =
         [ ( 0, False )
         , ( 1, False )
         , ( 2, False )
         , ( 3, False )
         ]
-    , toggleSpeed = Custom 3000
     }
 
 
