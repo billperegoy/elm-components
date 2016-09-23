@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.App as App
 import Accordion exposing (..)
+import Breadcrumb exposing (..)
 
 
 main =
@@ -70,6 +71,21 @@ initAccordionElements =
     ]
 
 
+breadcrumbConfig1 =
+    [ BreadcrumbElement "one" "http://www.google.com"
+    , BreadcrumbElement "two" "#"
+    , BreadcrumbElement "three" "#"
+    , BreadcrumbElement "four" "#"
+    , BreadcrumbElement "five" "#"
+    ]
+
+
+breadcrumbConfig2 =
+    [ BreadcrumbElement "ten" "http://www.google.com"
+    , BreadcrumbElement "nine" "#"
+    ]
+
+
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
@@ -118,12 +134,34 @@ init =
         ! []
 
 
+accordionExamples : Model -> List (Html Msg)
+accordionExamples model =
+    [ h1 [] [ text "Accordion Examples" ]
+    , App.map Accordion1 (Accordion.view model.accordion1 initAccordionData1)
+    , App.map Accordion2 (Accordion.view model.accordion2 initAccordionData2)
+    ]
+
+
+horizontalRule : List (Html Msg)
+horizontalRule =
+    [ hr [] [] ]
+
+
+breadcrumbExamples : List (Html Msg)
+breadcrumbExamples =
+    [ h1 [] [ text "Breadcrumb Examples" ]
+    , Breadcrumb.view breadcrumbConfig1
+    , Breadcrumb.view breadcrumbConfig2
+    ]
+
+
 view : Model -> Html Msg
 view model =
-    div [ style [ ( "width", "200px" ) ] ]
-        [ App.map Accordion1 (Accordion.view model.accordion1 initAccordionData1)
-        , App.map Accordion2 (Accordion.view model.accordion2 initAccordionData2)
-        ]
+    div [ style [ ( "width", "500px" ) ] ]
+        (accordionExamples model
+            ++ horizontalRule
+            ++ breadcrumbExamples
+        )
 
 
 subscriptions : Model -> Sub Msg
