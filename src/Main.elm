@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.App as App
 import Accordion exposing (..)
+import Breadcrumb exposing (..)
 
 
 main =
@@ -16,26 +17,29 @@ main =
 
 
 type alias Model =
-    { accordion1 : Accordion.Model
-    , accordion2 : Accordion.Model
+    { accordion1 : Accordion.State
+    , accordion2 : Accordion.State
     }
 
 
 type Msg
-    = NoOp
-    | Accordion1 Accordion.Msg
+    = Accordion1 Accordion.Msg
     | Accordion2 Accordion.Msg
 
 
-initAccordionData1 : AccordionData Accordion.Msg
+initAccordionData1 : AccordionConfig Accordion.Msg
 initAccordionData1 =
     { elements = initAccordionElements
+    , name = "accordion-1"
+    , toggleSpeed = Fast
     }
 
 
-initAccordionData2 : AccordionData Accordion.Msg
+initAccordionData2 : AccordionConfig Accordion.Msg
 initAccordionData2 =
     { elements = initAccordionElements
+    , name = "accordion-2"
+    , toggleSpeed = Slow
     }
 
 
@@ -67,12 +71,24 @@ initAccordionElements =
     ]
 
 
+breadcrumbConfig1 =
+    [ BreadcrumbElement "one" "http://www.google.com"
+    , BreadcrumbElement "two" "#"
+    , BreadcrumbElement "three" "#"
+    , BreadcrumbElement "four" "#"
+    , BreadcrumbElement "five" "#"
+    ]
+
+
+breadcrumbConfig2 =
+    [ BreadcrumbElement "ten" "http://www.google.com"
+    , BreadcrumbElement "nine" "#"
+    ]
+
+
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
-        NoOp ->
-            model ! []
-
         Accordion1 msg ->
             let
                 ( result, cmd ) =
@@ -88,29 +104,25 @@ update msg model =
                 { model | accordion2 = result } ! [ cmd ]
 
 
-init1 : Accordion.Model
+init1 : Accordion.State
 init1 =
-    { name = "accordion-1"
-    , visible =
+    { visible =
         [ ( 0, False )
         , ( 1, False )
         , ( 2, False )
         , ( 3, False )
         ]
-    , toggleSpeed = Fast
     }
 
 
-init2 : Accordion.Model
+init2 : Accordion.State
 init2 =
-    { name = "accordion-2"
-    , visible =
+    { visible =
         [ ( 0, False )
         , ( 1, False )
         , ( 2, False )
         , ( 3, False )
         ]
-    , toggleSpeed = Custom 3000
     }
 
 
@@ -122,12 +134,34 @@ init =
         ! []
 
 
+accordionExamples : Model -> List (Html Msg)
+accordionExamples model =
+    [ h1 [] [ text "Accordion Examples" ]
+    , App.map Accordion1 (Accordion.view model.accordion1 initAccordionData1)
+    , App.map Accordion2 (Accordion.view model.accordion2 initAccordionData2)
+    ]
+
+
+horizontalRule : List (Html Msg)
+horizontalRule =
+    [ hr [] [] ]
+
+
+breadcrumbExamples : List (Html Msg)
+breadcrumbExamples =
+    [ h1 [] [ text "Breadcrumb Examples" ]
+    , Breadcrumb.view breadcrumbConfig1
+    , Breadcrumb.view breadcrumbConfig2
+    ]
+
+
 view : Model -> Html Msg
 view model =
-    div [ style [ ( "width", "200px" ) ] ]
-        [ App.map Accordion1 (Accordion.view model.accordion1 initAccordionData1)
-        , App.map Accordion2 (Accordion.view model.accordion2 initAccordionData2)
-        ]
+    div [ style [ ( "width", "500px" ) ] ]
+        (accordionExamples model
+            ++ horizontalRule
+            ++ breadcrumbExamples
+        )
 
 
 subscriptions : Model -> Sub Msg
