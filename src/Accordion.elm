@@ -115,7 +115,7 @@ expandedClass visibility =
 accordionItem : String -> ToggleSpeed -> ( VisibilityElement, AccordionElement Msg ) -> Html Msg
 accordionItem name toggleSpeed visibiityTuple =
     let
-        ( visibility, data ) =
+        ( visibility, config ) =
             visibiityTuple
     in
         li []
@@ -125,10 +125,10 @@ accordionItem name toggleSpeed visibiityTuple =
                 , href "javascript:void(0)"
                 , onClick (Toggle name (fst visibility) toggleSpeed)
                 ]
-                [ text data.label ]
+                [ text config.label ]
             , ul
                 [ class "submenu" ]
-                data.items
+                config.items
             ]
 
 
