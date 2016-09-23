@@ -16,8 +16,8 @@ main =
 
 
 type alias Model =
-    { accordion1 : Accordion.Model
-    , accordion2 : Accordion.Model
+    { accordion1 : Accordion.State
+    , accordion2 : Accordion.State
     }
 
 
@@ -27,7 +27,7 @@ type Msg
     | Accordion2 Accordion.Msg
 
 
-initAccordionData1 : AccordionData Accordion.Msg
+initAccordionData1 : AccordionConfig Accordion.Msg
 initAccordionData1 =
     { elements = initAccordionElements
     , name = "accordion-1"
@@ -35,7 +35,7 @@ initAccordionData1 =
     }
 
 
-initAccordionData2 : AccordionData Accordion.Msg
+initAccordionData2 : AccordionConfig Accordion.Msg
 initAccordionData2 =
     { elements = initAccordionElements
     , name = "accordion-2"
@@ -92,7 +92,7 @@ update msg model =
                 { model | accordion2 = result } ! [ cmd ]
 
 
-init1 : Accordion.Model
+init1 : Accordion.State
 init1 =
     { visible =
         [ ( 0, False )
@@ -103,7 +103,7 @@ init1 =
     }
 
 
-init2 : Accordion.Model
+init2 : Accordion.State
 init2 =
     { visible =
         [ ( 0, False )

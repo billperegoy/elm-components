@@ -7,17 +7,26 @@ import Html.Events exposing (..)
 
 
 --
--- Model
+-- State
 --
 
 
-type ToggleSpeed
-    = Fast
-    | Slow
-    | Custom Int
+type alias State =
+    { visible : List VisibilityElement
+    }
 
 
-type alias AccordionData a =
+type alias VisibilityElement =
+    ( Int, Bool )
+
+
+
+--
+-- Config
+--
+
+
+type alias AccordionConfig a =
     { elements : List (AccordionElement a)
     , name : String
     , toggleSpeed : ToggleSpeed
@@ -30,13 +39,10 @@ type alias AccordionElement a =
     }
 
 
-type alias VisibilityElement =
-    ( Int, Bool )
-
-
-type alias Model =
-    { visible : List VisibilityElement
-    }
+type ToggleSpeed
+    = Fast
+    | Slow
+    | Custom Int
 
 
 
@@ -70,7 +76,7 @@ speedToInt speed =
             duration
 
 
-update : Msg -> Model -> ( Model, Cmd a )
+update : Msg -> State -> ( State, Cmd a )
 update msg model =
     case msg of
         Toggle name id speed ->
@@ -126,21 +132,21 @@ accordionItem name toggleSpeed visibiityTuple =
             ]
 
 
-accordionList : Model -> AccordionData Msg -> Html Msg
-accordionList model data =
+accordionList : State -> AccordionConfig Msg -> Html Msg
+accordionList model config =
     let
         zippedData : List ( VisibilityElement, AccordionElement Msg )
         zippedData =
-            List.map2 (,) model.visible data.elements
+            List.map2 (,) model.visible config.elements
     in
-        ul [ class "accordion", id data.name ]
-            (List.map (accordionItem data.name data.toggleSpeed) zippedData)
+        ul [ class "accordion", id config.name ]
+            (List.map (accordionItem config.name config.toggleSpeed) zippedData)
 
 
-view : Model -> AccordionData Msg -> Html Msg
-view model data =
+view : State -> AccordionConfig Msg -> Html Msg
+view model config =
     div []
-        [ accordionList model data
+        [ accordionList model config
         ]
 
 
