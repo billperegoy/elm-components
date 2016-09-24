@@ -5,6 +5,8 @@ import Html.Attributes exposing (..)
 import Html.App as App
 import Accordion exposing (..)
 import Breadcrumb exposing (..)
+import ButtonGroup exposing (..)
+import Dropdown exposing (..)
 
 
 main =
@@ -19,12 +21,14 @@ main =
 type alias Model =
     { accordion1 : Accordion.State
     , accordion2 : Accordion.State
+    , dropdown : Dropdown.State
     }
 
 
 type Msg
     = Accordion1 Accordion.Msg
     | Accordion2 Accordion.Msg
+    | Dropdown Dropdown.Msg
 
 
 initAccordionData1 : AccordionConfig Accordion.Msg
@@ -86,6 +90,25 @@ breadcrumbConfig2 =
     ]
 
 
+buttonConfig : ButtonConfig
+buttonConfig =
+    [ ButtonElement "item" "Item"
+    , ButtonElement "other-item" "Other But Longer Item"
+    , ButtonElement "other-item" "Third"
+    , ButtonElement "third" "Last Item"
+    ]
+
+
+dropdownConfig : DropdownConfig
+dropdownConfig =
+    DropdownConfig "Description"
+        [ DropdownElement "Dropdown Menu Item" "#"
+        , DropdownElement "Another Item" "#"
+        , DropdownElement "Item Three" "#"
+        , DropdownElement "The Last One" "#"
+        ]
+
+
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
@@ -102,6 +125,9 @@ update msg model =
                     Accordion.update msg model.accordion2
             in
                 { model | accordion2 = result } ! [ cmd ]
+
+        Dropdown msg ->
+            { model | dropdown = Dropdown.update msg model.dropdown } ! []
 
 
 init1 : Accordion.State
@@ -130,6 +156,7 @@ init : ( Model, Cmd Msg )
 init =
     { accordion1 = init1
     , accordion2 = init2
+    , dropdown = Dropdown.init
     }
         ! []
 
@@ -155,12 +182,30 @@ breadcrumbExamples =
     ]
 
 
+buttonGroupExamples : List (Html Msg)
+buttonGroupExamples =
+    [ h1 [] [ text "Button Group Examples" ]
+    , ButtonGroup.view buttonConfig
+    ]
+
+
+dropdownExamples : Model -> List (Html Msg)
+dropdownExamples model =
+    [ h1 [] [ text "Dropdown Examples" ]
+    , App.map Dropdown (Dropdown.view model.dropdown dropdownConfig)
+    ]
+
+
 view : Model -> Html Msg
 view model =
     div [ style [ ( "width", "500px" ) ] ]
-        (accordionExamples model
+        (dropdownExamples model
+            ++ accordionExamples model
+            ++ horizontalRule
             ++ horizontalRule
             ++ breadcrumbExamples
+            ++ horizontalRule
+            ++ buttonGroupExamples
         )
 
 
